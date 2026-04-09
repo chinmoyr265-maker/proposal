@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For You ❤️</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+<style>
+body {
+  font-family: 'Poppins', sans-serif;
+  background: radial-gradient(circle at top, #1a001f, #000);
+  overflow: hidden;
+}
+
+/* Glass */
+.glass {
+  backdrop-filter: blur(20px);
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+/* Hearts */
+.heart {
+  position: absolute;
+  color: #ff4d6d;
+  animation: floatUp linear infinite;
+}
+
+@keyframes floatUp {
+  from { transform: translateY(100vh); opacity: 0; }
+  to { transform: translateY(-10vh); opacity: 1; }
+}
+
+/* Cursor glow (disabled on mobile automatically) */
+#cursor {
+  position: fixed;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: rgba(255, 77, 109, 0.3);
+  filter: blur(50px);
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+}
+
+/* Confetti */
+.confetti {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: pink;
+  animation: fall linear forwards;
+}
+
+@keyframes fall {
+  to { transform: translateY(100vh) rotate(720deg); }
+}
+</style>
+</head>
+
+<body class="text-white flex items-center justify-center h-screen">
+
+<div id="cursor" class="hidden md:block"></div>
+<div id="hearts"></div>
+
+<div id="app" class="text-center px-4 w-full max-w-md">
+
+<!-- Intro -->
+<div id="intro" class="glass p-6 md:p-10 rounded-3xl">
+  <h1 class="text-xl md:text-4xl font-bold mb-6 leading-snug">
+    From the moment I met you… my world changed ❤️
+  </h1>
+
+  <button onclick="startProposal()"
+    class="px-6 py-3 bg-pink-500 rounded-full text-base md:text-lg w-full md:w-auto active:scale-95 transition">
+    Continue
+  </button>
+</div>
+
+<!-- Proposal -->
+<div id="proposal" class="hidden">
+  <h2 class="text-2xl md:text-5xl font-bold mb-10 leading-snug">
+    Will you be mine forever? 💍
+  </h2>
+
+  <!-- Stack on mobile -->
+  <div class="flex flex-col md:flex-row gap-4 items-center justify-center relative">
+    
+    <button onclick="sayYes()"
+      class="px-8 py-4 bg-pink-500 rounded-full text-lg md:text-xl shadow-xl w-full md:w-auto active:scale-95 transition">
+      ❤️ Yes
+    </button>
+
+    <button id="noBtn"
+      class="px-8 py-4 bg-gray-700 rounded-full text-lg md:text-xl absolute md:static">
+      💔 No
+    </button>
+
+  </div>
+</div>
+
+<!-- Final -->
+<div id="final" class="hidden">
+  <h1 class="text-3xl md:text-6xl font-bold text-pink-500">
+    Thank youuu ❤️
+  </h1>
+  <p class="mt-6 text-lg md:text-xl">
+    I promise to take care of you for the rest of my life.
+  </p>
+</div>
+
+</div>
+
+<script>
+// Cursor glow (only desktop)
+const cursor = document.getElementById("cursor");
+document.addEventListener("mousemove", e => {
+  if (window.innerWidth > 768) {
+    cursor.style.left = e.clientX + "px";
+    cursor.style.top = e.clientY + "px";
+  }
+});
+
+// Hearts
+const heartsContainer = document.getElementById("hearts");
+for (let i = 0; i < 20; i++) {
+  const heart = document.createElement("div");
+  heart.className = "heart";
+  heart.innerText = "❤️";
+  heart.style.left = Math.random() * 100 + "vw";
+  heart.style.animationDuration = (5 + Math.random() * 5) + "s";
+  heart.style.fontSize = (10 + Math.random() * 20) + "px";
+  heartsContainer.appendChild(heart);
+}
+
+function startProposal() {
+  intro.classList.add("hidden");
+  proposal.classList.remove("hidden");
+}
+
+// No button logic (mobile + desktop)
+const noBtn = document.getElementById("noBtn");
+
+function moveNoButton() {
+  const padding = 20;
+
+  const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+  const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+
+  const x = Math.random() * maxX;
+  const y = Math.random() * maxY;
+
+  noBtn.style.position = "fixed";
+  noBtn.style.left = x + "px";
+  noBtn.style.top = y + "px";
+  noBtn.style.transform = `rotate(${Math.random() * 30 - 15}deg)`;
+}
+
+// Desktop hover
+noBtn.addEventListener("mouseenter", moveNoButton);
+
+// Mobile touch
+noBtn.addEventListener("touchstart", (e) => {
+  e.preventDefault();
+  moveNoButton();
+});
+
+// YES
+function sayYes() {
+  proposal.classList.add("hidden");
+  final.classList.remove("hidden");
+  launchConfetti();
+}
+
+// Confetti
+function launchConfetti() {
+  for (let i = 0; i < 80; i++) {
+    const c = document.createElement("div");
+    c.className = "confetti";
+    c.style.left = Math.random() * 100 + "vw";
+    c.style.top = "-10px";
+    c.style.animationDuration = (2 + Math.random() * 2) + "s";
+    document.body.appendChild(c);
+  }
+}
+</script>
+
+</body>
+</html>
